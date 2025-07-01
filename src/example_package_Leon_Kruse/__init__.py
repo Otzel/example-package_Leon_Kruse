@@ -1,13 +1,24 @@
-"""Example package providing simple arithmetic helpers."""
+"""A minimal environment wrapper for Gymnasium-like environments."""
 
 from importlib.metadata import PackageNotFoundError, version
 
-from .example import add_one, add_two, add_three
+__all__ = ["SassyEnvWrapper"]
 
 try:  # pragma: no cover - version is provided when installed
     __version__ = version(__name__)
 except PackageNotFoundError:  # pragma: no cover - fallback for local usage
     __version__ = "0.0.0"
 
-__all__ = ["add_one", "add_two", "add_three"]
 
+class SassyEnvWrapper:
+    """Wrapper that prints a sassy message whenever ``step`` is called."""
+
+    def __init__(self, env):
+        self.env = env
+
+    def step(self, action):
+        print("Girl, you better step it like you mean it!")
+        return self.env.step(action)
+
+    def __getattr__(self, name):
+        return getattr(self.env, name)

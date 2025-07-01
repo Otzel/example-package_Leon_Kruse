@@ -1,5 +1,8 @@
-from example_package_Leon_Kruse import add_one, add_two, add_three
+from example_package_Leon_Kruse import SassyEnvWrapper
 
-print("add_one(4) ->", add_one(4))
-print("add_two(4) ->", add_two(4))
-print("add_three(4) ->", add_three(4))
+class DummyEnv:
+    def step(self, action):
+        return action
+
+wrapped = SassyEnvWrapper(DummyEnv())
+print("step ->", wrapped.step(42))
