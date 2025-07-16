@@ -2,7 +2,9 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
-__all__ = ["SassyEnvWrapper"]
+from .bumpy_terrain_wrapper import BumpyTerrainWrapper
+
+__all__ = ["SassyEnvWrapper", "BumpyTerrainWrapper"]
 
 try:  # pragma: no cover - version is provided when installed
     __version__ = version(__name__)

@@ -14,7 +14,7 @@ pip install --upgrade --index-url https://test.pypi.org/simple/ --no-deps exampl
 ## Usage
 
 ```python
-from example_package_Leon_Kruse import SassyEnvWrapper
+from example_package_Leon_Kruse import SassyEnvWrapper, BumpyTerrainWrapper
 
 class DummyEnv:
     def step(self, action):
@@ -24,6 +24,20 @@ wrapped = SassyEnvWrapper(DummyEnv())
 wrapped.step(0)  # prints a sassy message
 ```
 
+````python
+from dm_control import suite, viewer
+from example_package_Leon_Kruse import BumpyTerrainWrapper
+
+env = suite.load("cartpole", "balance")
+env = BumpyTerrainWrapper(env, bumpiness=2)
+
+# show the environment in a window
+viewer.launch(env)
+
+# you can also grab frames directly
+pixels = env.physics.render(camera_id=0, height=480, width=640)
+````
+
 ## Versioning
 
 The project uses `hatch-vcs` to derive the package version from Git tags. When
@@ -32,4 +46,4 @@ back to ``0.0.0`` in a local checkout.
 
 ## Examples
 
-An executable example is available in `examples/demo.py`.
+Executable examples are available in `examples/demo.py` and `examples/bumpy_demo.py`.
