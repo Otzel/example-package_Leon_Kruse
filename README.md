@@ -1,9 +1,8 @@
-# Sassy Env Wrapper
+# DM Control Terrain Utilities
 
-This package provides a minimal wrapper for Gymnasium-style environments.
-Whenever `step()` is called, the wrapper prints a short message before
-forwarding the call to the original environment. It is primarily intended to
-show how to publish a tiny package that wraps an environment.
+This package provides helpers for modifying terrains in DeepMind Control Suite environments.
+It includes a wrapper for scaling existing height fields and a helper to patch domains with
+procedural terrain.
 
 ## Installation
 
@@ -14,36 +13,28 @@ pip install --upgrade --index-url https://test.pypi.org/simple/ --no-deps exampl
 ## Usage
 
 ```python
-from example_package_Leon_Kruse import SassyEnvWrapper, BumpyTerrainWrapper
+from example_package_Leon_Kruse import BumpyTerrainWrapper, patch_domain
+from dm_control import suite, viewer
 
-class DummyEnv:
-    def step(self, action):
-        return action
+patch_domain("fish")
 
-wrapped = SassyEnvWrapper(DummyEnv())
-wrapped.step(0)  # prints a sassy message
+env = suite.load(
+    "fish",
+    "swim",
+    task_kwargs={
+        "environment_kwargs": {
+            "mode": "terrain",
+            "terrain": {"bump_scale": 0.15, "smoothness": 0.1},
+        }
+    },
+)
+viewer.launch(environment_loader=env)
 ```
 
-````python
-from dm_control import suite, viewer
-from example_package_Leon_Kruse import BumpyTerrainWrapper
-
-env = suite.load("cartpole", "balance")
-env = BumpyTerrainWrapper(env, bumpiness=2)
-
-# show the environment in a window
-viewer.launch(env)
-
-# you can also grab frames directly
-pixels = env.physics.render(camera_id=0, height=480, width=640)
-````
+Additional examples are available in `examples/demo.py` and `examples/bumpy_demo.py`.
 
 ## Versioning
 
 The project uses `hatch-vcs` to derive the package version from Git tags. When
 installed from a release, `__version__` reflects that tag; otherwise it falls
-back to ``0.0.0`` in a local checkout.
-
-## Examples
-
-Executable examples are available in `examples/demo.py` and `examples/bumpy_demo.py`.
+back to `0.0.0` in a local checkout.
