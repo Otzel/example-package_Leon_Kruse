@@ -1,8 +1,21 @@
-from example_package_Leon_Kruse import SassyEnvWrapper
+from dm_control import suite, viewer
+from example_package_Leon_Kruse import patch_domain
 
-class DummyEnv:
-    def step(self, action):
-        return action
+# Enable terrain in the fish domain
+patch_domain("fish")
 
-wrapped = SassyEnvWrapper(DummyEnv())
-print("step ->", wrapped.step(42))
+env = suite.load(
+    domain_name="fish",
+    task_name="swim",
+    task_kwargs={
+        "environment_kwargs": {
+            "mode": "terrain",
+            "terrain": {
+                "bump_scale": 0.15,
+                "smoothness": 0.1,
+            },
+        }
+    }
+)
+
+viewer.launch(environment_loader=env)
